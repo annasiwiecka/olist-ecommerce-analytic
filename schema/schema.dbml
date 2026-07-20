@@ -1,0 +1,97 @@
+Table customers {
+  customer_id varchar [primary key, not null]
+  customer_unique_id varchar [not null]
+  customer_zip_code_prefix integer
+  customer_city varchar
+  customer_state varchar
+}
+
+Table geolocation {
+  id integer [increment, primary key]
+  geolocation_zip_code_prefix integer [not null]
+  geolocation_lat float
+  geolocation_lng float
+  geolocation_city varchar
+  geolocation_state varchar 
+}
+
+Table order_items {
+  order_id varchar [not null]
+  order_item_id integer [not null]
+  product_id varchar [not null]
+  seller_id varchar [not null]
+  shipping_limit_date timestamp
+  price float [not null]
+  freight_value float [not null]
+  
+  indexes {
+    (order_id, order_item_id) [pk]
+  }
+}
+
+Table order_payments {
+  order_id varchar [not null]
+  payment_sequential integer [not null]
+  payment_type varchar [not null]
+  payment_installments integer
+  payment_value float [not null]
+  
+  indexes {
+    (order_id, payment_sequential) [pk]
+  }
+}
+
+Table order_reviews {
+  review_id varchar [primary key, not null]
+  order_id varchar [not null]
+  review_score integer [not null]
+  review_comment_title varchar
+  review_comment_message text
+  review_creation_date timestamp [not null]
+  review_answer_timestamp timestamp
+}
+
+Table orders {
+  order_id varchar [primary key]
+  customer_id varchar [not null]
+  order_status varchar [not null] 
+  order_purchase_timestamp timestamp
+  order_approved_at timestamp
+  order_delivered_carrier_date timestamp
+  order_delivered_customer_date timestamp 
+  order_estimated_delivery_date timestamp [not null]
+}
+
+Table products {
+  product_id varchar [primary key, not null]
+  product_category_name varchar
+  product_name_lenght integer
+  product_description_lenght integer
+  product_photos_qty integer
+  product_weight_g integer
+  product_height_cm integer
+  product_width_cm integer
+}
+  
+Table sellers {
+  seller_id varchar [primary key, not null] 
+  seller_zip_code_prefix integer [not null]
+  seller_city varchar
+  seller_state varchar
+}
+
+Table product_category_name_translation {
+  id integer [increment, primary key]
+  product_category_name varchar [unique, not null]
+  product_category_name_english varchar [not null]
+}
+
+Ref: orders.customer_id > customers.customer_id
+Ref: order_items.order_id > orders.order_id
+Ref: order_items.product_id > products.product_id
+Ref: order_items.seller_id > sellers.seller_id
+Ref: order_payments.order_id > orders.order_id
+Ref: order_reviews.order_id > orders.order_id
+Ref: products.product_category_name > product_category_name_translation.product_category_name
+Ref: customers.customer_zip_code_prefix <> geolocation.geolocation_zip_code_prefix
+Ref: sellers.seller_zip_code_prefix <> geolocation.geolocation_zip_code_prefix
