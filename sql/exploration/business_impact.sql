@@ -1,6 +1,6 @@
 -- Business impact of data quality issues found in sql/quality_checks/.
 
--- ====== orphan irder items =====
+-- ====== orphan order items =====
 -- how much revenue belongs to orders that no longer exist?
 
 SELECT COUNT(*) as orphan_items,
@@ -10,7 +10,7 @@ WHERE NOT EXISTS (SELECT 1 FROM raw.orders p where p.order_id = c.order_id);
 
 
 -- =====  duplicated orders ===== 
--- by how much would revenue be overstated if items were joined to orders wihout remowing duplicates?
+-- by how much would revenue be overstated if items were joined to orders wihout removing duplicates?
 
 SELECT 
     (SELECT SUM(oi.price::numeric)
@@ -28,12 +28,12 @@ SELECT
 -- what share of revenue is missing from a category ranking?
 
 SELECT ROUND(100.0 * SUM(oi.price::numeric) 
-    FILTER (WHERE p.product_category_name IS NULL) / SUM(oi.price::numeric), 1) AS pct_revenue_wihout_category
+    FILTER (WHERE p.product_category_name IS NULL) / SUM(oi.price::numeric), 1) AS pct_revenue_without_category
 FROM raw.order_items oi
 JOIN raw.products p ON p.product_id = oi.product_id;
 
 
--- ===== mixed data formats =====
+-- ===== mixed date formats =====
 -- how many orders would land in the wrong month without any error?
 
 SELECT COUNT(*) AS silently_misdated_on_mdy_server
