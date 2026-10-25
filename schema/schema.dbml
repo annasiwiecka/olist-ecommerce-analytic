@@ -10,11 +10,11 @@ Table clean.geolocation {
   id integer [increment, primary key]
   geolocation_zip_code_prefix integer [not null]
   geolocation_lat "double precision"   
-  geolocation_lng "double precision"   
+  geolocation_lng "double precision"  
   geolocation_city varchar
   geolocation_state varchar
 
-  Note: 'Joined to customers and sellers by zip code prefix. Not a foreign key: zip codes repeat in this table.'   
+  Note: 'Joined to customers and sellers by zip code prefix. Not a foreign key: zip codes repeat in this table.'
 }
 
 Table clean.order_items {
@@ -44,13 +44,17 @@ Table clean.order_payments {
 }
 
 Table clean.order_reviews {
-  review_id varchar [primary key, not null]
+  review_id varchar [not null]
   order_id varchar [not null]
   review_score integer [not null]
   review_comment_title varchar
   review_comment_message text
   review_creation_date timestamp [not null]
   review_answer_timestamp timestamp
+
+  indexes {
+    (review_id, order_id) [pk]
+  }
 }
 
 Table clean.orders {
