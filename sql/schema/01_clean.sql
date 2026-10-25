@@ -38,13 +38,14 @@ CREATE TABLE "clean"."order_payments" (
 );
 
 CREATE TABLE "clean"."order_reviews" (
-  "review_id" varchar PRIMARY KEY NOT NULL,
+  "review_id" varchar NOT NULL,
   "order_id" varchar NOT NULL,
   "review_score" integer NOT NULL,
   "review_comment_title" varchar,
   "review_comment_message" text,
   "review_creation_date" timestamp NOT NULL,
-  "review_answer_timestamp" timestamp
+  "review_answer_timestamp" timestamp,
+  PRIMARY KEY ("review_id", "order_id")
 );
 
 CREATE TABLE "clean"."orders" (
