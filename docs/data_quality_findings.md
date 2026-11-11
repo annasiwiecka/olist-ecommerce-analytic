@@ -113,22 +113,16 @@ Decided:
   so the data model changes instead of rows being deleted.
 - Issues are prioritized by their effect on revenue, not by technical
   severity.
-
-To resolve during cleaning:
-
-- [ ] Update the DBML model and regenerate the `clean` schema with the new
-      `order_reviews` key.
-- [ ] Check categories without an English translation; then add translations
-      or drop the foreign key.
-- [ ] Add an `unknown` row to `product_category_name_translation` so the
-      foreign key accepts products without a category.
+- 2 categories used by 10 products had no English translation
+  (`portateis_cozinha_e_preparadores_de_alimentos`, `pc_gamer`). Translations
+  were added manually, so the foreign key stays in place. An `unknown`
+  category was added for products without a category.
 
 ## Next steps
 
-1. Resolve the remaining decisions above.
-2. Write `sql/cleaning/` scripts that load `raw` into `clean`: deduplicate
+1. Write `sql/cleaning/` scripts that load `raw` into `clean`: deduplicate
    orders, parse dates with an explicit format, normalize text, fix or reject
    invalid values.
-3. Move rows that cannot be fixed to a `rejected` table with the reason.
-4. Re-run the quality checks against `clean` and confirm the issues are resolved.
-5. Wrap the steps in `run_pipeline.py` and add unit tests.
+2. Move rows that cannot be fixed to a `rejected` table with the reason.
+3. Re-run the quality checks against `clean` and confirm the issues are resolved.
+4. Wrap the steps in `run_pipeline.py` and add unit tests.
